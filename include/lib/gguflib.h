@@ -8,8 +8,8 @@
 #ifndef GGUFLIB_H
 #define GGUFLIB_H
 
+#include <stddef.h>
 #include <stdint.h>
-#include <cstddef>
 
 /* ============================ Enums and structures ======================== */
 
