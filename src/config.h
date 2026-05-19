@@ -4,7 +4,7 @@
 #include "tokenizer.h"
 #include <cstdint>
 #include <string>
-
+#include <vector>
 class Config {
 public:
   std::string arch;
@@ -12,7 +12,7 @@ public:
   uint32_t context_length = 0;
   uint32_t embedding_length = 0;
   uint32_t block_count = 0;
-  uint32_t feed_forward_length = 0;
+  std::vector<uint32_t> feed_forward_length;
   uint32_t attention_head_count = 0;
   uint32_t attention_head_count_kv = 0;
   uint32_t attention_key_length = 0;

@@ -41,6 +41,9 @@ public:
     if (type == GGUF_VALUE_TYPE_INT32) {
       auto *vec = static_cast<std::vector<int32_t> *>(priv);
       vec->push_back(val->int32);
+    } else if (type == GGUF_VALUE_TYPE_UINT32) {
+      auto *vec = static_cast<std::vector<uint32_t> *>(priv);
+      vec->push_back(val->uint32);
     }
   }
 

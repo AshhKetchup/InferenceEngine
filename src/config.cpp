@@ -1,7 +1,7 @@
 #include "config.h"
 #include <cstdio>
-
-using std::string;
+#include <iostream>
+using namespace std;
 
 Config::Config(GGUFModel *model, const Tokenizer &tok) {
   gguf_ctx *ctx = model->getCtx();
@@ -28,13 +28,16 @@ Config::Config(GGUFModel *model, const Tokenizer &tok) {
   string prefix = arch + ".";
   gguf_rewind(ctx);
   while (gguf_get_key(ctx, &key)) {
+    // cout << key.name << " : " << key.type << endl;
     if (Callback::key_is(key, (prefix + "embedding_length").c_str()))
       embedding_length = key.val->uint32;
     else if (Callback::key_is(key, (prefix + "block_count").c_str()))
       block_count = key.val->uint32;
-    else if (Callback::key_is(key, (prefix + "feed_forward_length").c_str()))
-      feed_forward_length = key.val->uint32;
-    else if (Callback::key_is(key, (prefix + "context_length").c_str()))
+    else if (Callback::key_is(key, (prefix + "feed_forward_length").c_str())) {
+      gguf_do_with_value(ctx, key.type, key.val, &feed_forward_length, 0, 0,
+                         Callback::collect_ints);
+      continue;
+    } else if (Callback::key_is(key, (prefix + "context_length").c_str()))
       context_length = key.val->uint32;
     else if (Callback::key_is(key, (prefix + "attention.head_count").c_str()))
       attention_head_count = key.val->uint32;
@@ -73,11 +76,14 @@ void Config::print() const {
   printf("context_length           : %u\n", context_length);
   printf("embedding_length         : %u\n", embedding_length);
   printf("block_count              : %u\n", block_count);
-  printf("feed_forward_length      : %u\n", feed_forward_length);
   printf("attention.head_count     : %u\n", attention_head_count);
   printf("attention.head_count_kv  : %u\n", attention_head_count_kv);
   printf("attention.key_length     : %u\n", attention_key_length);
   printf("attention.value_length   : %u\n", attention_value_length);
   printf("rms_norm_eps             : %g\n", rms_norm_eps);
   printf("rope.freq_base           : %g\n", rope_freq_base);
+  printf("feed_forward_length      : ");
+  for (auto i : feed_forward_length)
+    cout << i << " ";
+  cout << endl;
 }
