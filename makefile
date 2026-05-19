@@ -1,12 +1,20 @@
-CC = gcc
-CXX = g++
-CFLAGS = -O2 -Wall
+CC      = gcc
+CXX     = g++
+CFLAGS  = -O2 -Wall
 CXXFLAGS = -O2 -std=c++17 -Wall
 
-infer-eng: infer-eng.o gguflib.o fp16.o
+OBJS = infer-eng.o src/tokenizer.o src/config.o gguflib.o fp16.o
+
+infer-eng: $(OBJS)
 	$(CXX) $^ -o $@
 
-infer-eng.o: infer-eng.cpp
+infer-eng.o: infer-eng.cpp src/gguf_model.h src/tokenizer.h src/config.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+src/tokenizer.o: src/tokenizer.cpp src/tokenizer.h src/gguf_model.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+src/config.o: src/config.cpp src/config.h src/tokenizer.h src/gguf_model.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 gguflib.o: include/src/gguflib.c
@@ -16,4 +24,4 @@ fp16.o: include/src/fp16.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o infer-eng
+	rm -f *.o src/*.o infer-eng
