@@ -1,5 +1,6 @@
 #include "src/config.h"
 #include "src/gguf_model.h"
+#include "src/maths_op.h"
 #include "src/tokenizer.h"
 
 #include <cstdio>
@@ -41,6 +42,8 @@ static void repl(Tokenizer &tok) {
 }
 
 int main() {
+  run_math_tests();
+
   const char *filename = "./.models/gguf/gemma-4-E2B-it-UD-IQ2_M.gguf";
 
   GGUFModel model(filename);
