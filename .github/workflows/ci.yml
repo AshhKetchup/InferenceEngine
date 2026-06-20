@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    run-on: ubuntu-latest
+    steps:
+      - name: checkout code 
+        uses: actions/checkout@v4
+      - name: Install dep
+        run: sudo apt-get install g++ gcc make
+      - name: Build
+        run: make
+   

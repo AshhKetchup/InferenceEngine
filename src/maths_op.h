@@ -8,5 +8,3 @@ void matvec(float *out, const float *W, const float *x, std::size_t rows,
 
 void rmsnorm(float *out, const float *x, const float *g, std::size_t n,
              float eps);
-
-void run_math_tests();
